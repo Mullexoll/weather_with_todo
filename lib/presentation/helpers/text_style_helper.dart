@@ -34,3 +34,11 @@ TextStyle primaryTextStyle30() {
     fontWeight: FontWeight.w500,
   );
 }
+
+TextStyle defaultBlack16() {
+ return const TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16,
+    color: Colors.black,
+  );
+}

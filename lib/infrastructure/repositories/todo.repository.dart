@@ -48,6 +48,7 @@ class TodoRepository {
           todoTitle: todo.todoTitle,
           todoValue: todo.todoValue,
           todoStatus: !todo.todoStatus,
+          category: todo.category,
         );
 
         // Save the changes by calling .save()

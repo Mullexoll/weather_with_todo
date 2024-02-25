@@ -15,6 +15,8 @@ class AddNewTodo extends StatefulWidget {
 class _AddNewTodoState extends State<AddNewTodo> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  List<String> options = ['Without category', 'Work', 'Sport', 'Life'];
+  String selectedOption = 'Without category';
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,25 @@ class _AddNewTodoState extends State<AddNewTodo> {
           TextField(
             controller: descriptionController,
             decoration: const InputDecoration(labelText: 'Description'),
+          ),
+          DropdownButton<String>(
+            value: selectedOption, // The currently selected option
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  selectedOption = newValue;
+                });
+                BlocProvider.of<TodoBloc>(context).add(
+                  FilterTypeChanged(filterName: newValue),
+                );
+              }
+            },
+            items: options.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -49,6 +70,7 @@ class _AddNewTodoState extends State<AddNewTodo> {
                 NewTodoAdded(
                   todoValue: description,
                   todoTitle: title,
+                  category: selectedOption,
                 ),
               );
               Navigator.of(context).pop();

@@ -17,33 +17,38 @@ const TodoModelSchema = CollectionSchema(
   name: r'TodoModel',
   id: 4924789365587537652,
   properties: {
-    r'hashCode': PropertySchema(
+    r'category': PropertySchema(
       id: 0,
+      name: r'category',
+      type: IsarType.string,
+    ),
+    r'hashCode': PropertySchema(
+      id: 1,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'id': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'id',
       type: IsarType.string,
     ),
     r'stringify': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'stringify',
       type: IsarType.bool,
     ),
     r'todoStatus': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'todoStatus',
       type: IsarType.bool,
     ),
     r'todoTitle': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'todoTitle',
       type: IsarType.string,
     ),
     r'todoValue': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'todoValue',
       type: IsarType.string,
     )
@@ -82,6 +87,7 @@ int _todoModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.category.length * 3;
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.todoTitle.length * 3;
   bytesCount += 3 + object.todoValue.length * 3;
@@ -94,12 +100,13 @@ void _todoModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.hashCode);
-  writer.writeString(offsets[1], object.id);
-  writer.writeBool(offsets[2], object.stringify);
-  writer.writeBool(offsets[3], object.todoStatus);
-  writer.writeString(offsets[4], object.todoTitle);
-  writer.writeString(offsets[5], object.todoValue);
+  writer.writeString(offsets[0], object.category);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeString(offsets[2], object.id);
+  writer.writeBool(offsets[3], object.stringify);
+  writer.writeBool(offsets[4], object.todoStatus);
+  writer.writeString(offsets[5], object.todoTitle);
+  writer.writeString(offsets[6], object.todoValue);
 }
 
 TodoModel _todoModelDeserialize(
@@ -109,10 +116,11 @@ TodoModel _todoModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TodoModel(
-    id: reader.readString(offsets[1]),
-    todoStatus: reader.readBool(offsets[3]),
-    todoTitle: reader.readString(offsets[4]),
-    todoValue: reader.readString(offsets[5]),
+    category: reader.readString(offsets[0]),
+    id: reader.readString(offsets[2]),
+    todoStatus: reader.readBool(offsets[4]),
+    todoTitle: reader.readString(offsets[5]),
+    todoValue: reader.readString(offsets[6]),
   );
   return object;
 }
@@ -125,16 +133,18 @@ P _todoModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 3:
-      return (reader.readBool(offset)) as P;
-    case 4:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 4:
+      return (reader.readBool(offset)) as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -381,6 +391,137 @@ extension TodoModelQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'category',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'category',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'category',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition> categoryIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'category',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterFilterCondition>
+      categoryIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'category',
+        value: '',
       ));
     });
   }
@@ -877,6 +1018,18 @@ extension TodoModelQueryLinks
     on QueryBuilder<TodoModel, TodoModel, QFilterCondition> {}
 
 extension TodoModelQuerySortBy on QueryBuilder<TodoModel, TodoModel, QSortBy> {
+  QueryBuilder<TodoModel, TodoModel, QAfterSortBy> sortByCategory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterSortBy> sortByCategoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoModel, TodoModel, QAfterSortBy> sortByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
@@ -964,6 +1117,18 @@ extension TodoModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<TodoModel, TodoModel, QAfterSortBy> thenByCategory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.asc);
+    });
+  }
+
+  QueryBuilder<TodoModel, TodoModel, QAfterSortBy> thenByCategoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.desc);
+    });
+  }
+
   QueryBuilder<TodoModel, TodoModel, QAfterSortBy> thenByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
@@ -1039,6 +1204,13 @@ extension TodoModelQuerySortThenBy
 
 extension TodoModelQueryWhereDistinct
     on QueryBuilder<TodoModel, TodoModel, QDistinct> {
+  QueryBuilder<TodoModel, TodoModel, QDistinct> distinctByCategory(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'category', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<TodoModel, TodoModel, QDistinct> distinctByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hashCode');
@@ -1084,6 +1256,12 @@ extension TodoModelQueryProperty
   QueryBuilder<TodoModel, int, QQueryOperations> autoIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'autoId');
+    });
+  }
+
+  QueryBuilder<TodoModel, String, QQueryOperations> categoryProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'category');
     });
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/todo_bloc/todo_bloc.dart';
 import '../../../domain/models/todo_models/todo.model.dart';
+import '../../helpers/text_style_helper.dart';
 
 class TodoCard extends StatefulWidget {
   final TodoModel todo;
@@ -20,8 +21,14 @@ class _TodoCardState extends State<TodoCard> {
       color:
           widget.todo.todoStatus ? Colors.greenAccent : Colors.redAccent[100],
       child: ListTile(
-        title: Text(widget.todo.todoTitle),
-        subtitle: Text(widget.todo.todoValue),
+        title: Text(
+          widget.todo.todoTitle,
+          style: defaultBlack16(),
+        ),
+        subtitle: Text(
+          widget.todo.todoValue,
+          style: defaultBlack16(),
+        ),
         leading: Checkbox(
           value: widget.todo.todoStatus,
           onChanged: (value) {

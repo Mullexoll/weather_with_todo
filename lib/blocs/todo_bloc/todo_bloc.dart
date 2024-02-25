@@ -16,11 +16,12 @@ part 'todo_state.dart';
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   late Isar _isarRepository;
 
-  TodoBloc() : super(TodoLoaded(todos: const [])) {
+  TodoBloc() : super(TodoLoaded(todos: const [], currentFilter: 'All')) {
     on<TodoRepositoryInit>(_onTodoRepositoryInit);
     on<NewTodoAdded>(_onNewTodoAdded);
     on<TodoStatusChanged>(_onTodoStatusChanged);
     on<TodoDeleted>(_onTodoDeleted);
+    on<FilterTypeChanged>(_onFilterTypeChanged);
   }
 
   Future<FutureOr<void>> _onTodoRepositoryInit(
@@ -43,15 +44,16 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         await TodoRepository(_isarRepository).getAllRepositories();
 
     //emit state with saved previously todos
-    emit(TodoLoaded(todos: savedTodos));
+    emit(TodoLoaded(todos: savedTodos, currentFilter: 'All'));
   }
 
-  FutureOr<void> _onNewTodoAdded(
+  Future<FutureOr<void>> _onNewTodoAdded(
     NewTodoAdded event,
     Emitter<TodoState> emit,
-  ) {
+  ) async {
     //get todo list from state
-    List<TodoModel> savedTodos = List.of((state as TodoLoaded).todos);
+    final List<TodoModel> savedTodos =
+        await TodoRepository(_isarRepository).getAllRepositories();
 
     //create random number for id
     //TODO: need to change to Uuid
@@ -64,6 +66,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       todoTitle: event.todoTitle,
       todoValue: event.todoValue,
       todoStatus: false,
+      category: event.category,
     );
 
     //add newTodo to Isar Database
@@ -95,6 +98,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       todoTitle: todoToUpdate.todoTitle,
       todoValue: todoToUpdate.todoValue,
       todoStatus: !todoToUpdate.todoStatus,
+      category: todoToUpdate.category,
     );
     //update old model
     savedTodos[indexToUpdate] = updatedTodo;
@@ -136,5 +140,63 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   _updateTodoFromDataBase(String id) {
     TodoRepository(_isarRepository).updateTodo(id);
+  }
+
+  Future<FutureOr<void>> _onFilterTypeChanged(
+    FilterTypeChanged event,
+    Emitter<TodoState> emit,
+  ) async {
+    final List<TodoModel> savedTodos =
+        await TodoRepository(_isarRepository).getAllRepositories();
+    //get todo list from state
+    if (event.filterName == 'Completed') {
+      List<TodoModel> completedTodos =
+          savedTodos.where((todo) => todo.todoStatus).toList();
+
+      emit((state as TodoLoaded).copyWith(
+        todos: completedTodos,
+        currentFilter: event.filterName,
+      ));
+    } else if (event.filterName == 'All') {
+      emit((state as TodoLoaded).copyWith(
+        todos: savedTodos,
+        currentFilter: event.filterName,
+      ));
+    } else if (event.filterName == "Not completed") {
+      List<TodoModel> notCompletedTodos =
+          savedTodos.where((todo) => !todo.todoStatus).toList();
+
+      emit((state as TodoLoaded).copyWith(
+        todos: notCompletedTodos,
+        currentFilter: event.filterName,
+      ));
+    } else if (event.filterName == "Work") {
+      List<TodoModel> notCompletedTodos = savedTodos
+          .where((todo) => todo.category == event.filterName)
+          .toList();
+
+      emit((state as TodoLoaded).copyWith(
+        todos: notCompletedTodos,
+        currentFilter: event.filterName,
+      ));
+    } else if (event.filterName == "Sport") {
+      List<TodoModel> notCompletedTodos = savedTodos
+          .where((todo) => todo.category == event.filterName)
+          .toList();
+
+      emit((state as TodoLoaded).copyWith(
+        todos: notCompletedTodos,
+        currentFilter: event.filterName,
+      ));
+    } else if (event.filterName == "Life") {
+      List<TodoModel> notCompletedTodos = savedTodos
+          .where((todo) => todo.category == event.filterName)
+          .toList();
+
+      emit((state as TodoLoaded).copyWith(
+        todos: notCompletedTodos,
+        currentFilter: event.filterName,
+      ));
+    }
   }
 }

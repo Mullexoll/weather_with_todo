@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
             context: context,
             builder: (context) => const AddNewTodo(),
           ),
+          child: const Icon(Icons.add),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),

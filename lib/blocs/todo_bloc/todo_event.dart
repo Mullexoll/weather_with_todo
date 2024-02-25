@@ -11,16 +11,19 @@ class TodoRepositoryInit extends TodoEvent {
 class NewTodoAdded extends TodoEvent {
   final String todoTitle;
   final String todoValue;
+  final String category;
 
   NewTodoAdded({
     required this.todoValue,
     required this.todoTitle,
+    required this.category,
   });
 
   @override
   List<Object?> get props => [
         todoValue,
         todoTitle,
+        category,
       ];
 }
 
@@ -40,4 +43,13 @@ class TodoDeleted extends TodoEvent {
 
   @override
   List<Object?> get props => [id];
+}
+
+class FilterTypeChanged extends TodoEvent {
+  final String filterName;
+
+  FilterTypeChanged({required this.filterName});
+
+  @override
+  List<Object?> get props => [filterName];
 }

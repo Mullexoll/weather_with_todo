@@ -13,12 +13,14 @@ class TodoModel extends Equatable {
   final String todoTitle;
   final String todoValue;
   final bool todoStatus;
+  final String category;
 
   const TodoModel({
     required this.id,
     required this.todoTitle,
     required this.todoValue,
     required this.todoStatus,
+    required this.category,
   });
 
   @override
@@ -27,5 +29,6 @@ class TodoModel extends Equatable {
         todoTitle,
         todoValue,
         todoStatus,
+        category,
       ];
 }

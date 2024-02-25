@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_with_todo/presentation/widgets/home_screen_widgets/todo_card.dart';
 
 import '../../../blocs/todo_bloc/todo_bloc.dart';
+import 'filtering_menu_delegate.dart';
 
 class TodosBuilder extends StatelessWidget {
   const TodosBuilder({super.key});
@@ -14,6 +15,14 @@ class TodosBuilder extends StatelessWidget {
         if (state is TodoLoaded) {
           return CustomScrollView(
             slivers: <Widget>[
+              SliverPersistentHeader(
+                delegate:
+                    FilteringMenuDelegate(), // Create a delegate for your filtering menu
+                floating:
+                    true, // Whether the menu should become visible when scrolling down
+                pinned:
+                    true, // Whether the menu should remain visible when scrolling up
+              ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
